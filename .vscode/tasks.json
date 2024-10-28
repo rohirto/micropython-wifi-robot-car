@@ -1,0 +1,87 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Setup Virtual Environment (Linux/Mac)",
+            "type": "shell",
+            "command": "bash",
+            "args": [
+                "-c",
+                "if [ ! -d .venv ]; then python -m venv .venv; .venv/bin/pip install esptool; else echo 'Virtual environment already exists.'; .venv/bin/pip install esptool; fi"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Setup Virtual Environment (Windows)",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-Command",
+                "if (-Not (Test-Path .venv)) { python -m venv .venv; .venv\\Scripts\\pip install esptool } else { echo 'Virtual environment already exists.'; .venv\\Scripts\\pip install esptool }"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Flash Micropyhton Firmware",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "-m",
+                "esptool",
+                "--port",
+                "COM8",  // Change this to your device's port
+                "write_flash",
+                "-z",
+                "0x1000",
+                "micropython_fw/ESP32_GENERIC-20241025-v1.24.0.bin"  // Change this to your firmware file
+            ],
+            "group": "build",
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}"  // Ensure this points to the correct working directory
+            }
+        },
+        {
+            "label": "Erase Flash",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "-m",
+                "esptool",
+                "--port",
+                "COM8",  // Change this to your device's port
+                "erase_flash"
+            ],
+            "group": "build",
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            "label": "Check Chip",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "-m",
+                "esptool",
+                "--port",
+                "COM8",  // Change this to your device's port
+                "chip_id"
+            ],
+            "group": "build",
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        }
+    ]
+}
